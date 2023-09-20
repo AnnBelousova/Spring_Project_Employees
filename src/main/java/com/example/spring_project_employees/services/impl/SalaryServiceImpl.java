@@ -5,10 +5,8 @@ import com.example.spring_project_employees.services.EmployeeService;
 import com.example.spring_project_employees.services.SalaryService;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class SalaryServiceImpl implements SalaryService {
@@ -46,11 +44,39 @@ public class SalaryServiceImpl implements SalaryService {
     }
 
     @Override
-    public List<Employee> getAllEmployees() {
-        List<Employee> employeeList = employeeService.getListEmployees()
+    public Map<Integer, List<Employee>> getAllEmployees() {
+        return employeeService.getListEmployees()
                 .stream()
-                .sorted(Comparator.comparing(Employee::getEmpDepartment))
-                .collect(Collectors.toList());
-        return employeeList;
+                .collect(Collectors.groupingBy(Employee::getEmpDepartment));
+    }
+
+    @Override
+    public double getTotalEmployeesSumByDepartment(Integer depNumber) {
+        return employeeService.getListEmployees()
+                .stream()
+                .filter(e -> e.getEmpDepartment() == depNumber)
+                .mapToDouble(x -> x.getSalary())
+                .sum();
+    }
+
+    @Override
+    public double getMaxSalaryByDepartmentNumber(Integer depNumber) {
+        double emplMaxSalary = employeeService.getListEmployees().stream()
+                .filter(e -> e.getEmpDepartment() == depNumber)
+                .max(Comparator.comparingDouble(Employee::getSalary))
+                .get()
+                .getSalary();
+
+        return emplMaxSalary;
+    }
+
+    @Override
+    public double getMinSalaryByDepartmentNumber(Integer depNumber) {
+        Double emplMaxSalary = employeeService.getListEmployees().stream()
+                .filter(e -> e.getEmpDepartment() == depNumber)
+                .min(Comparator.comparingDouble(Employee::getSalary))
+                .get()
+                .getSalary();
+        return emplMaxSalary;
     }
 }

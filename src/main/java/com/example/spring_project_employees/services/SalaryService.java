@@ -3,7 +3,7 @@ package com.example.spring_project_employees.services;
 import com.example.spring_project_employees.models.Employee;
 
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Map;
 
 public interface SalaryService {
 
@@ -13,5 +13,11 @@ public interface SalaryService {
 
     List<Employee> employeesByDepartmentNumber(Integer depNumber);
 
-    List<Employee> getAllEmployees();
+    Map<Integer, List<Employee>> getAllEmployees();
+
+    double getTotalEmployeesSumByDepartment(Integer depNumber);
+
+    double getMaxSalaryByDepartmentNumber(Integer depNumber);
+
+    double getMinSalaryByDepartmentNumber(Integer depNumber);
 }
