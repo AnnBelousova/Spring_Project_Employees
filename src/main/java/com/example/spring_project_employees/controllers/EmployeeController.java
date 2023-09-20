@@ -24,22 +24,19 @@ public class EmployeeController {
     public Employee addEmployee(@RequestParam("firstName") String firstName,
                                 @RequestParam("lastName") String lastName, @RequestParam("department") Integer department, @RequestParam("salary") Double salary) {
         employee = new Employee(firstName, lastName, department, salary);
-        employeeService.addEmployee(firstName, lastName, department, salary);
+        employeeService.addEmployee(employee);
         return employee;
     }
 
-    @GetMapping(path = "/remove", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Employee removeEmployee(@RequestParam("firstName") String firstName,
+    @GetMapping(path = "/remove")
+    public void removeEmployee(@RequestParam("firstName") String firstName,
                                    @RequestParam("lastName") String lastName) {
-        employee = new Employee(firstName, lastName);
         employeeService.removeEmployee(firstName, lastName);
-        return employee;
     }
 
-    @GetMapping(path = "/find", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Employee findEmployee(@RequestParam("firstName") String firstName, String lastName) {
-        employee = new Employee(firstName, lastName);
-        employeeService.findEmployee(firstName, lastName);
+    @GetMapping(path = "/find")
+    public Employee findEmployee(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
+        Employee employee = employeeService.findEmployee(firstName, lastName);
         return employee;
     }
 }

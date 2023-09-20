@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    final int maxEmployeeCapacity = 5;
+    final int maxEmployeeCapacity = 10;
     final List<Employee> listEmployees = new ArrayList<>(
             Arrays.asList(
                     new Employee("Anna", "Belou", 1, 20000),
@@ -28,13 +28,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public void addEmployee(String firstName, String lastName, Integer department, Double salary) {
-        Employee employee = new Employee(firstName, lastName, department, salary);
+    public void addEmployee(Employee employee) {
         if (listEmployees.size() >= maxEmployeeCapacity) {
             throw new EmployeeStorageIsFullException("Capacity is full");
         } else {
             for (int i = 0; i < listEmployees.size() - 1; i++) {
-                if (listEmployees.get(i).getFirstName().equals(firstName) && listEmployees.get(i).getLastName().equals(lastName)) {
+                if (listEmployees.get(i).getFirstName().equals(employee.getFirstName()) && listEmployees.get(i).getLastName().equals(employee.getLastName())) {
                     throw new EmployeeAlreadyAddedException("Employee in list");
                 } else {
                     listEmployees.add(employee);
@@ -47,25 +46,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void removeEmployee(String firstName, String lastName) {
-        for (Employee emp : listEmployees) {
-            if (emp.getFirstName().equals(firstName) && emp.getLastName().equals(lastName)) {
-                listEmployees.remove(emp);
-                System.out.println(listEmployees);
-            } else {
-                throw new EmployeeNotFoundException("Employee was not found");
-            }
-        }
+        listEmployees.removeIf(e -> e.getFirstName().equals(firstName) && e.getLastName().equals(lastName));
+        System.out.println(listEmployees);
     }
 
     @Override
-    public void findEmployee(String firstName, String lastName) {
-        for (Employee emp : listEmployees) {
-            if (emp.getFirstName().equals(firstName) && emp.getLastName().equals(lastName)) {
-                System.out.println("Employee was find");
-            } else {
-                throw new EmployeeNotFoundException("Employee was not found");
-            }
-        }
+    public Employee findEmployee(String firstName, String lastName) {
+        Employee foundEmployee = listEmployees
+                .stream()
+                .filter(e -> ((e.getFirstName().equals(firstName)) && (e.getLastName().equals(lastName))))
+                .findFirst()
+                .orElse(null);
+        return foundEmployee;
     }
 
     @Override

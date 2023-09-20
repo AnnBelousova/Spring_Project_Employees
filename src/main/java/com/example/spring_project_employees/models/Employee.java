@@ -1,5 +1,7 @@
 package com.example.spring_project_employees.models;
 
+import java.util.stream.Stream;
+
 public class Employee {
     private String firstName;
     private String lastName;
@@ -47,8 +49,7 @@ public class Employee {
     @Override
     public String toString() {
         return
-//                "id: " + empId +
-                ", Full name: " + firstName +
+                "Full name: " + firstName +
                         " " + lastName +
                         ". Department:" + empDepartment +
                         ", salary:" + salary;
